@@ -1,5 +1,6 @@
 from twilio.twiml.voice_response import VoiceResponse
-from flask import Flask, render_template
+from twilio.rest import Client
+from flask import Flask, render_template, request
 
 import requests
 import json
@@ -15,8 +16,16 @@ app = Flask(__name__)
 @app.route("/")
 def main():
 #	return "Welcome to Joe Kennedy's CourtHack hack!"
+	
+	#rendering = render_template('courtHackTemplate.html',
+	#		keywords='testKeywords',
+	#		transcripts='testTranscripts')
+
 	return render_template('index.html')
 
+#@app.route()
+#def index(kw, tr):
+#	return render_template("index.html", keywords=kw, transcripts=tr)
 
 @app.route("/voice", methods=['GET','POST'])
 def voice():
@@ -64,21 +73,30 @@ def callback():
 		return 'Add VoiceBase Voice Analysis add-on in Twilio console'
 
 	payload_url = add_ons["results"]["project_hermes"]["payload"][0]["url"]
+	
+#	return str(payload_url)
 
-	account_sid = os.environ.get('TWILIO_ACCOUNT_SID') 
-	auth_token = os.environ.get('TWILIO_AUTH_TOKEN')
-	resp = requests.get(payload_url, auth=(account_sid, auth_token)).json()
+	account_sid = 'AC09b54d9841be31dd6741bcd4e32bd63b'
+	auth_token = '053d22ecd4dbd98f2b6a4d44bb2b90ac'
+
+	results = 'Filler in callback'
+
+	response = requests.get(payload_url, auth=(account_sid, auth_token)).json()
+	results = 'GET request successful'
 
 #	print(resp)
+	recKeywords = response["media"]["keywords"]
+	recTranscripts = response["media"]["transcripts"]
 
-	results = resp['results'][0]['results']
-	text = results['media']["transcripts"]["text"]
-#	transcripts = map(lambda res: res[][0]["transcript"], results)
-#	temp = VoiceResponse()
-#	temp.say("You hit the callback")
+#	text = results['media']["transcripts"]["text"]
 
-	return  str(results)
+	rendering = render_template('index.html',
+			keywords=recKeywords,
+			transcripts=recTranscripts)
 
+#	response = requests.post("http://613dc9ad.ngrok.io/", rendering)
+
+	return response
 
 
 
