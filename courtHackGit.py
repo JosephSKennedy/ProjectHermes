@@ -76,8 +76,8 @@ def callback():
 	
 #	return str(payload_url)
 
-	account_sid = 'AC09b54d9841be31dd6741bcd4e32bd63b'
-	auth_token = '053d22ecd4dbd98f2b6a4d44bb2b90ac'
+	account_sid = ''
+	auth_token = ''
 
 	results = 'Filler in callback'
 
